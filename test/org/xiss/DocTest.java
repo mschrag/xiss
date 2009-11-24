@@ -216,4 +216,10 @@ public class DocTest extends TestCase {
 
     assertEquals(xmlString1, xmlString2);
   }
+  
+  public void testEscapedValues() {
+    XML.Doc doc = XML.doc();
+    doc.root("person").set("name", "<M & M>");
+    assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<person name=\"&lt;M &amp; M&gt;\" />\n", doc.toString());
+  }
 }
