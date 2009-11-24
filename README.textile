@@ -9,8 +9,7 @@ h2. Building
 
 There are a couple ways you can build XML documents with XISS.
 
-The first way uses varargs. This is the shortest way, but might choke if your IDE doesn't
-respent newlines.
+The first way uses varargs. This is the shortest way, but might choke if your IDE doesn't respect newlines:
 
 <pre>
 <code>
@@ -34,7 +33,7 @@ XML.Doc doc = XML.doc(
 </code>
 </pre>
 
-The other way is more verbose, but will always format properly in your IDE.
+The other way is more verbose, but will always format properly in your IDE:
 
 <pre>
 <code>
