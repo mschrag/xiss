@@ -16,8 +16,11 @@ public class Building {
                 XML.e("address",
                     XML.a("location", "Home"),
                     XML.e("address", "100 Main St."),
-                    XML.e("city", "Richmond")
-                )
+                    XML.e("city", "Richmond"),
+                    XML.e("state", "VA"),
+                    XML.e("zip", "23233")
+                ),
+                XML.cdata("This is a cdata section! <test> of cdata!")
             )
         )
     );
