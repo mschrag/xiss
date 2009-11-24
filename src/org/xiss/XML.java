@@ -309,7 +309,7 @@ public class XML {
      */
     public XML.E root(String name, String value) {
       checkNullRoot();
-      XML.E root = XML.e(name);
+      XML.E root = XML.e(name, value);
       setRoot(root);
       return root;
     }
