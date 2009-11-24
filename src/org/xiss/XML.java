@@ -1302,8 +1302,15 @@ public class XML {
    */
   public static XML.Doc doc(String documentString) {
     try {
-      Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(documentString)));
-      return XML.doc(document);
+    	XML.Doc doc;
+    	if (documentString == null || documentString.trim().length() == 0) {
+    		doc = XML.doc();
+    	}
+    	else {
+    		Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(documentString)));
+      	doc = XML.doc(document);
+    	}
+    	return doc;
     }
     catch (Throwable t) {
       throw new IllegalArgumentException("Failed to parse a document from the provided string.", t);
