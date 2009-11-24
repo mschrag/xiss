@@ -342,7 +342,7 @@ public class XML {
       }
       else if (root != null) {
         _root = root;
-        add(root);
+        _add(root);
       }
     }
 
@@ -354,7 +354,7 @@ public class XML {
      * @return this document
      */
     public XML.Doc comment(String comment) {
-      add(XML.comment(comment));
+      _add(XML.comment(comment));
       return this;
     }
 
@@ -368,6 +368,16 @@ public class XML {
     }
 
     /**
+     * Adds a new child to this document.
+     * 
+     * @param child the child to add
+     */
+    protected void _add(XML.Item child) {
+      child.setParent(this);
+      _children.add(child);
+    }
+
+    /**
      * Adds a new child to this document. No validation is performed of these items.
      * 
      * @param <T> the type of the item
@@ -375,10 +385,14 @@ public class XML {
      * @return the newly added item
      */
     public <T extends XML.Item> T add(T child) {
-      child.setParent(this);
-      _children.add(child);
       if (_root == null && child instanceof XML.E) {
-        _root = (XML.E) child;
+        setRoot((XML.E) child);
+      }
+      else if (child instanceof XML.Declaration) {
+        setDeclaration((XML.Declaration) child);
+      }
+      else {
+        _add(child);
       }
       return child;
     }
@@ -1311,7 +1325,7 @@ public class XML {
   public static XML.Attr a(String name, String value) {
     return new XML.Attr(name, value);
   }
-  
+
   /**
    * Creates and returns a new text node.
    * 
