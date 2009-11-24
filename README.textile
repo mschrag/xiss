@@ -1,7 +1,9 @@
 h1. XISS
 
 XISS is a simple xml parsing/building library for Java. The goal is to provide a very simple
-and very terse API for building XML documents in Java code.
+and very terse API for building XML documents in Java code. XISS does NOT implement the full
+set of features of the W3C DOM API's -- if you need something fancier, use JDOM. If you just
+need to build simple documents in code, XISS might be worth a look.
 
 h2. Building
 
