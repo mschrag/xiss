@@ -800,6 +800,71 @@ public class XML {
     }
 
     /**
+     * Returns the int variant of the value of the attribute with the given name, or null if there isn't one.
+     * 
+     * @param attributeName the name of the attribute to lookup
+     * @param defaultValue the default value to return if there is no attribute, or if the attribute value is null
+     * @return the int variant of the value of the attribute with the given name, or null if there isn't one.
+     */
+    public int getInt(String attributeName, int defaultValue) {
+      int value = defaultValue;
+      String text = get(attributeName);
+    	if (text != null) {
+    		value = Integer.parseInt(text);
+    	}
+      return value;
+    }
+
+    /**
+     * Returns the float variant of the value of the attribute with the given name, or null if there isn't one.
+     * 
+     * @param attributeName the name of the attribute to lookup
+     * @param defaultValue the default value to return if there is no attribute, or if the attribute value is null
+     * @return the float variant of the value of the attribute with the given name, or null if there isn't one.
+     */
+    public float getFloat(String attributeName, float defaultValue) {
+    	float value = defaultValue;
+      String text = get(attributeName);
+    	if (text != null) {
+     		value = Float.parseFloat(text);
+      }
+      return value;
+    }
+
+    /**
+     * Returns the boolean variant of the value of the attribute with the given name, or null if there isn't one.
+     * 
+     * @param attributeName the name of the attribute to lookup
+     * @param defaultValue the default value to return if there is no attribute, or if the attribute value is null
+     * @return the boolean variant of the value of the attribute with the given name, or null if there isn't one.
+     */
+    public boolean getBoolean(String attributeName, boolean defaultValue) {
+    	boolean value = defaultValue;
+      String text = get(attributeName);
+    	if (text != null) {
+     		value = Boolean.parseBoolean(text);
+     	}
+      return value;
+    }
+
+    /**
+     * Returns the enum variant of the value of the attribute with the given name, or null if there isn't one.
+     * 
+     * @param attributeName the name of the attribute to lookup
+     * @param enumClass the class of the enum to return
+     * @param defaultValue the default value to return if there is no attribute, or if the attribute value is null
+     * @return the enum variant of the value of the attribute with the given name, or null if there isn't one.
+     */
+    public <T extends Enum<T>> T getEnum(String attributeName, Class<T> enumClass, T defaultValue) {
+    	T value = defaultValue;
+      String text = get(attributeName);
+    	if (text != null) {
+     		value = Enum.valueOf(enumClass, text);
+      }
+      return value;
+    }
+
+    /**
      * Returns the attributes for this element.
      * 
      * @return the attributes for this element
@@ -843,13 +908,13 @@ public class XML {
      * 
      * @return the text value of this element
      */
-    public String text() {
-      String text = null;
+    public XML.Text textNode() {
+    	XML.Text textNode = null;
       if (_children != null) {
         if (_children.size() == 1) {
           XML.Node node = _children.get(0);
           if (node instanceof XML.Text) {
-            text = ((XML.Text) node).text();
+            textNode = (XML.Text) node;
           }
           else {
             throw new IllegalStateException("There was only a non-text child of this element: " + node);
@@ -859,6 +924,18 @@ public class XML {
           throw new IllegalStateException("There was more than one child of this element: " + this);
         }
       }
+      return textNode;
+    }
+
+    /**
+     * Returns the text value of this element, or null if there isn't one. If there is a non-text
+     * child of this element, this will throw an exception.
+     * 
+     * @return the text value of this element
+     */
+    public String text() {
+    	XML.Text textNode = textNode();
+      String text = (textNode != null) ? textNode.text() : null;
       return text;
     }
 
@@ -878,12 +955,85 @@ public class XML {
      * @return the text of the child element with the given name from this element, or null if there isn't one
      */
     public String childText(String name) {
-      String text = null;
+      XML.E child = child(name);
+      return (child != null) ? child.text() : null;
+    }
+
+    /**
+     * Returns the int variant of the child element with the given name from this element, or defaultValue if there isn't one.
+     * 
+     * @param name the name of the element to look up
+     * @param defaultValue the default value to return if there is no child node, or if the child node is empty
+     * @return the int variant of the child element with the given name from this element, or defaultValue if there isn't one.
+     */
+    public int childInt(String name, int defaultValue) {
+      int value = defaultValue;
       XML.E child = child(name);
       if (child != null) {
-        text = child.text();
+      	String text = child.text();
+      	if (text != null) {
+      		value = Integer.parseInt(text);
+      	}
       }
-      return text;
+      return value;
+    }
+
+    /**
+     * Returns the float variant of the child element with the given name from this element, or defaultValue if there isn't one.
+     * 
+     * @param name the name of the element to look up
+     * @param defaultValue the default value to return if there is no child node, or if the child node is empty
+     * @return the float variant of the child element with the given name from this element, or defaultValue if there isn't one.
+     */
+    public float childFloat(String name, float defaultValue) {
+    	float value = defaultValue;
+      XML.E child = child(name);
+      if (child != null) {
+      	String text = child.text();
+      	if (text != null) {
+      		value = Float.parseFloat(text);
+      	}
+      }
+      return value;
+    }
+
+    /**
+     * Returns the boolean variant of the child element with the given name from this element, or defaultValue if there isn't one.
+     * 
+     * @param name the name of the element to look up
+     * @param defaultValue the default value to return if there is no child node, or if the child node is empty
+     * @return the boolean variant of the child element with the given name from this element, or defaultValue if there isn't one.
+     */
+    public boolean childBoolean(String name, boolean defaultValue) {
+    	boolean value = defaultValue;
+      XML.E child = child(name);
+      if (child != null) {
+      	String text = child.text();
+      	if (text != null) {
+      		value = Boolean.parseBoolean(text);
+      	}
+      }
+      return value;
+    }
+
+    /**
+     * Returns the enum variant of the child element with the given name from this element, or defaultValue if there isn't one.
+     * 
+     * @param name the name of the element to look up
+     * @param enumClass the class of the enum to return
+     * @param defaultValue the default value to return if there is no child node, or if the child node is empty
+     * @return the enum variant of the child element with the given name from this element, or defaultValue if there isn't one.
+     */
+    public <T extends Enum<T>> T childEnum(String name, Class<T> enumClass, T defaultValue) {
+    	T value = defaultValue;
+      XML.E child = child(name);
+      if (child != null) {
+      	String text = child.text();
+      	if (text != null) {
+      		value = Enum.valueOf(enumClass, text);
+      	}
+      }
+      return value;
     }
 
     /**
