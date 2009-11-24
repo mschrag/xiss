@@ -1,8 +1,11 @@
 h1. XISS
+
 XISS is a simple xml parsing/building library for Java. The goal is to provide a very simple
 and very terse API for building XML documents in Java code.
 
 h2. Building
+
+<pre>
 <code>
 XML.Doc doc = XML.doc();
 doc.comment("This is the structure for a person");
@@ -24,19 +27,27 @@ XML.E person = doc.root("person");
   }
 }
 </code>
+</pre>
 
 h2. Parsing
+
 Parsing just uses the W3C DOM parsers underneath, but wrapped to make them easier:
 
-<code>XML.Doc doc = XML.doc(String)</code>
-<code>XML.Doc doc = XML.doc(File)</code>
-<code>XML.Doc doc = XML.doc(Reader)</code>
+<pre>
+<code>
+XML.Doc doc = XML.doc(String)
+XML.Doc doc = XML.doc(File)
+XML.Doc doc = XML.doc(Reader)
+</code>
+</pre>
 
 h2. Printing
+
 The toString of XISS DOM objects just return pretty-print XML:
 
 <code>System.out.println(doc);</code>
 
+<pre>
 <code>
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- This is the structure for a person -->
@@ -55,3 +66,4 @@ The toString of XISS DOM objects just return pretty-print XML:
   </addresses>
 </person>
 </code>
+</pre>
