@@ -403,6 +403,24 @@ public class XML {
         }
       }
     }
+
+    public org.w3c.dom.Document w3c() {
+      try {
+        org.w3c.dom.Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+        if (_children != null) {
+          for (XML.Item child : _children) {
+            if (child instanceof XML.Node) {
+              org.w3c.dom.Node childNode = ((XML.Node) child).w3c(doc);
+              doc.appendChild(childNode);
+            }
+          }
+        }
+        return doc;
+      }
+      catch (Throwable t) {
+        throw new IllegalArgumentException("Failed to create a W3C Document from the this Doc.", t);
+      }
+    }
   }
 
   /**
@@ -411,6 +429,7 @@ public class XML {
    * @author mschrag
    */
   public static abstract class Node extends XML.Item {
+    public abstract org.w3c.dom.Node w3c(Document doc);
   }
 
   /**
@@ -488,6 +507,12 @@ public class XML {
     protected void writeText(PrintWriter writer) {
       writeEscapedString(text(), writer);
     }
+
+    @Override
+    public org.w3c.dom.Node w3c(Document doc) {
+      org.w3c.dom.Text text = doc.createTextNode(text());
+      return text;
+    }
   }
 
   /**
@@ -506,6 +531,12 @@ public class XML {
       writer.print(text());
       writer.println("]]>");
     }
+
+    @Override
+    public org.w3c.dom.Node w3c(Document doc) {
+      org.w3c.dom.CDATASection cdata = doc.createCDATASection(text());
+      return cdata;
+    }
   }
 
   /**
@@ -523,6 +554,12 @@ public class XML {
       writer.print("<!-- ");
       writer.print(text());
       writer.println(" -->");
+    }
+
+    @Override
+    public org.w3c.dom.Node w3c(Document doc) {
+      org.w3c.dom.Comment comment = doc.createComment(text());
+      return comment;
     }
   }
 
@@ -1044,6 +1081,23 @@ public class XML {
         writeAttributes(writer);
         writer.println(" />");
       }
+    }
+
+    @Override
+    public org.w3c.dom.Node w3c(Document doc) {
+      Element e = doc.createElement(_name);
+      if (_attributes != null) {
+        for (XML.Attr attribute : _attributes) {
+          e.setAttribute(attribute.name(), attribute.value());
+        }
+      }
+      if (_children != null) {
+        for (XML.Node child : _children) {
+          org.w3c.dom.Node childNode = child.w3c(doc);
+          e.appendChild(childNode);
+        }
+      }
+      return e;
     }
   }
 

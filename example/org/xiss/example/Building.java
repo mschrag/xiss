@@ -1,9 +1,12 @@
 package org.xiss.example;
 
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+
 import org.xiss.XML;
 
-public class BuildingXML1 {
-  public static void main(String[] args) {
+public class Building {
+  public static void main(String[] args) throws TransformerFactoryConfigurationError, TransformerException {
     XML.Doc doc = XML.doc();
     doc.comment("This is the structure for a person");
     XML.E person = doc.root("person");

@@ -2,11 +2,18 @@ package org.xiss;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
@@ -181,7 +188,7 @@ public class DocTest extends TestCase {
     assertEquals(shouldVisit, visited);
   }
 
-  public void testW3C() throws SAXException, IOException, ParserConfigurationException {
+  public void testW3CToXISS() throws SAXException, IOException, ParserConfigurationException {
     Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader("<person><first-name>Mike</first-name><last-name>Schrag</last-name><addresses><address location=\"home\"><address>100 Main St</address><city>Richmond</city></address></addresses></person>")));
     XML.Doc doc = XML.doc(document);
     assertEquals("person", doc.root().name());
@@ -190,5 +197,23 @@ public class DocTest extends TestCase {
     assertEquals(((XML.E) doc.root().children().get(2)).name(), "addresses");
     assertEquals(((XML.E) ((XML.E) doc.root().children().get(2)).children().get(0)).name(), "address");
     assertEquals(((XML.E) ((XML.E) doc.root().children().get(2)).children().get(0)).get("location"), "home");
+  }
+
+  public void testXISSToW3C() throws SAXException, IOException, ParserConfigurationException, TransformerFactoryConfigurationError, TransformerException {
+    org.w3c.dom.Document document1 = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader("<person><first-name>Mike</first-name><last-name>Schrag</last-name><addresses><address location=\"home\"><address>100 Main St</address><city>Richmond</city></address></addresses></person>")));
+    XML.Doc doc = XML.doc(document1);
+    org.w3c.dom.Document document2 = doc.w3c();
+
+    Transformer transformer = TransformerFactory.newInstance().newTransformer();
+
+    StreamResult result1 = new StreamResult(new StringWriter());
+    transformer.transform(new DOMSource(document1), result1);
+    String xmlString1 = result1.getWriter().toString();
+
+    StreamResult result2 = new StreamResult(new StringWriter());
+    transformer.transform(new DOMSource(document2), result2);
+    String xmlString2 = result2.getWriter().toString();
+
+    assertEquals(xmlString1, xmlString2);
   }
 }

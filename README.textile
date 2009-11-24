@@ -67,3 +67,7 @@ The toString of XISS DOM objects just return pretty-print XML:
 </person>
 </code>
 </pre>
+
+h2. Examples
+
+There are more examples of things you can do in the "example" folder.

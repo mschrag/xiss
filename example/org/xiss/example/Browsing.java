@@ -2,7 +2,7 @@ package org.xiss.example;
 
 import org.xiss.XML;
 
-public class NavigatingXML1 {
+public class Browsing {
   public static void main(String[] args) {
     XML.Doc doc = XML.doc();
     doc.comment("This is the structure for a person");
