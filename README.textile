@@ -33,6 +33,7 @@ XML.Doc doc = XML.doc(
 
 The other way is more verbose, but will always format properly in your IDE.
 
+<pre>
 <code>
 XML.Doc doc = XML.doc();
 doc.comment("This is the structure for a person");
