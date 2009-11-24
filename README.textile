@@ -7,7 +7,32 @@ need to build simple documents in code, XISS might be worth a look.
 
 h2. Building
 
+There are a couple ways you can build XML documents with XISS.
+
+The first way uses varargs. This is the shortest way, but might choke if your IDE doesn't
+respent newlines.
+
 <pre>
+<code>
+XML.Doc doc = XML.doc(
+    XML.comment("This is the structure for a person"),
+    XML.e("person",
+        XML.e("first-name", "Mike"),
+        XML.e("last-name", "Schrag"),
+        XML.e("addresses",
+            XML.e("address",
+                XML.a("location", "Home"),
+                XML.e("address", "100 Main St."),
+                XML.e("city", "Richmond")
+            )
+        )
+    )
+);
+</code>
+</pre>
+
+The other way is more verbose, but will always format properly in your IDE.
+
 <code>
 XML.Doc doc = XML.doc();
 doc.comment("This is the structure for a person");

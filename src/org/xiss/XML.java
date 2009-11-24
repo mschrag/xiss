@@ -338,11 +338,12 @@ public class XML {
         else {
           _children.remove(_root);
         }
+        _root = root;
       }
       else if (root != null) {
+        _root = root;
         add(root);
       }
-      _root = root;
     }
 
     /**
@@ -376,6 +377,9 @@ public class XML {
     public <T extends XML.Item> T add(T child) {
       child.setParent(this);
       _children.add(child);
+      if (_root == null && child instanceof XML.E) {
+        _root = (XML.E) child;
+      }
       return child;
     }
 
@@ -1225,6 +1229,21 @@ public class XML {
   }
 
   /**
+   * Creates and returns a new Document. The first item that is an element
+   * will be set as the root element of the document.
+   * 
+   * @param children the children to add to the document
+   * @return a new element
+   */
+  public static XML.Doc doc(XML.Item... children) {
+    XML.Doc doc = XML.doc();
+    for (XML.Item child : children) {
+      doc.add(child);
+    }
+    return doc;
+  }
+
+  /**
    * Creates and returns a new Declaration.
    * 
    * @param version the version of the declaration
@@ -1249,6 +1268,32 @@ public class XML {
    * Creates and returns a new Element.
    * 
    * @param name the name of the element
+   * @param children the children to add to this element (String, XML.Node, or XML.Attr)
+   * @return a new element
+   */
+  public static XML.E e(String name, Object... children) {
+    XML.E e = XML.e(name);
+    for (Object child : children) {
+      if (child instanceof String) {
+        e.text((String) child);
+      }
+      else if (child instanceof XML.Node) {
+        e.add((XML.Node) child);
+      }
+      else if (child instanceof XML.Attr) {
+        e.add((XML.Attr) child);
+      }
+      else {
+        throw new IllegalArgumentException("Unable to add the object '" + child + "' to an XML element.");
+      }
+    }
+    return e;
+  }
+
+  /**
+   * Creates and returns a new Element.
+   * 
+   * @param name the name of the element
    * @param text the text of the element
    * @return a new element
    */
@@ -1256,6 +1301,17 @@ public class XML {
     return new XML.E(name, text);
   }
 
+  /**
+   * Creates and returns a new attribute.
+   * 
+   * @param name the name of the attribute
+   * @param value the value of the attribute
+   * @return a new attribute
+   */
+  public static XML.Attr a(String name, String value) {
+    return new XML.Attr(name, value);
+  }
+  
   /**
    * Creates and returns a new text node.
    * 

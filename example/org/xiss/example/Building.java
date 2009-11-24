@@ -7,25 +7,20 @@ import org.xiss.XML;
 
 public class Building {
   public static void main(String[] args) throws TransformerFactoryConfigurationError, TransformerException {
-    XML.Doc doc = XML.doc();
-    doc.comment("This is the structure for a person");
-    XML.E person = doc.root("person");
-    {
-      person.e("first-name", "Bob");
-      person.e("last-name").setText("Jones");
-      person.comment("This is the structure for addresses");
-      XML.E addresses = person.e("addresses");
-      {
-        XML.E homeAddress = addresses.e("address").set("location", "Home");
-        {
-          homeAddress.e("address", "100 Main St");
-          homeAddress.e("city", "Richmond");
-          homeAddress.e("state", "VA");
-          homeAddress.e("zip", "23233");
-        }
-        addresses.cdata("This is a cdata section! <test> of cdata!");
-      }
-    }
+    XML.Doc doc = XML.doc(
+        XML.comment("This is the structure for a person"),
+        XML.e("person",
+            XML.e("first-name", "Mike"),
+            XML.e("last-name", "Schrag"),
+            XML.e("addresses",
+                XML.e("address",
+                    XML.a("location", "Home"),
+                    XML.e("address", "100 Main St."),
+                    XML.e("city", "Richmond")
+                )
+            )
+        )
+    );
     System.out.println(doc);
   }
 }
